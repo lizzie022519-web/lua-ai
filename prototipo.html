@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lua AI — Mundo de historias</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#100b1b;color:#f5efff;font-family:Georgia,serif}
+header{text-align:center;padding:30px 12px;background:linear-gradient(140deg,#563274,#180f29)}
+h1{color:#e9a8ff;letter-spacing:4px}
+main{max-width:850px;margin:auto;padding:16px}
+section{background:#20162f;border:1px solid #654780;border-radius:16px;padding:18px;margin:16px 0}
+h2{color:#e9a8ff}
+input,textarea,select{width:100%;padding:12px;margin:8px 0 14px;background:#120d1e;color:white;border:1px solid #765394;border-radius:8px}
+textarea{min-height:100px}
+button{padding:10px 14px;margin:4px;background:#68418a;color:white;border:1px solid #b18bd0;border-radius:9px}
+.book{padding:14px;margin:10px 0;background:#30203f;border-radius:12px}
+.cover{padding:24px;text-align:center;font-size:22px;background:linear-gradient(130deg,#8658a8,#271439);border-radius:8px;margin-bottom:10px}
+.small{color:#c7b4d9;font-size:13px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+<h1>☾ LUA AI</h1>
+<p>Donde tus sueños se convierten en historias ✦</p>
+</header>
+<main>
+<section>
+<h2>🌙 Menú</h2>
+<button onclick="view('library')">📚 Biblioteca</button>
+<button onclick="view('create')">✧ Crear historia</button>
+<button onclick="view('favorites')">♡ Favoritos</button>
+</section>
+
+<section id="create" class="hidden">
+<h2>Crear una historia</h2>
+<label>Título</label>
+<input id="title" placeholder="Nombre de tu historia">
+<label>Género</label>
+<select id="genre">
+<option>Fantasía</option><option>Romance</option><option>Misterio</option>
+<option>Aventura</option><option>Terror</option><option>Drama</option>
+<option>Ciencia ficción</option><option>Fanfic</option>
+</select>
+<label>Portada</label>
+<select id="style">
+<option value="violet">Noche violeta</option>
+<option value="rose">Rosa encantado</option>
+<option value="blue">Reino de hielo</option>
+<option value="green">Bosque mágico</option>
+</select>
+<label>Sinopsis</label>
+<textarea id="desc" placeholder="¿De qué trata?"></textarea>
+<label>Personajes</label>
+<input id="chars" placeholder="Nombres de los personajes">
+<button onclick="createStory()">Guardar historia ✦</button>
+<p id="message"></p>
+</section>
+
+<section id="library">
+<h2>📚 Mi biblioteca</h2>
+<input id="search" placeholder="Buscar historias..." oninput="render()">
+<div id="books"></div>
+<p id="empty" class="small">Todavía no hay historias. ¡Crea la primera!</p>
+</section>
+
+<section id="favorites" class="hidden">
+<h2>♡ Mis favoritos</h2>
+<div id="favs"></div>
+</section>
+
+<section id="reader" class="hidden">
+<button onclick="view('library')">← Volver</button>
+<h2 id="bookTitle"></h2>
+<p id="bookInfo" class="small"></p>
+<p id="bookDesc"></p>
+<p id="bookChars" class="small"></p>
+<hr>
+<h2>Capítulos</h2>
+<div id="chapters"></div>
+<h3>Nuevo capítulo</h3>
+<input id="chapterName" placeholder="Título del capítulo">
+<textarea id="chapterBody" placeholder="Escribe tu capítulo aquí..."></textarea>
+<button onclick="addChapter()">Guardar capítulo</button>
+<p id="chapterMessage" class="small"></p>
+</section>
+</main>
+<footer><p class="small" style="text-align:center">Lua AI · Tu imaginación no tiene límites ✨</p></footer>
+
+<script>
+let stories=[];
+let current=null;
+try{stories=JSON.parse(localStorage.getItem('luaStories')||'[]')}catch(e){}
+function save(){try{localStorage.setItem('luaStories',JSON.stringify(stories));return true}catch(e){alert('No se pudo guardar en este navegador.');return false}}
+function view(id){
+['create','library','favorites','reader'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id));
+if(id==='library'||id==='favorites')render();
+window.scrollTo(0,0)
+}
+function createStory(){
+let title=document.getElementById('title').value.trim();
+if(!title){document.getElementById('message').textContent='Escribe un título primero.';return}
+stories.unshift({id:Date.now(),title,genre:document.getElementById('genre').value,style:document.getElementById('style').value,desc:document.getElementById('desc').value,chars:document.getElementById('chars').value,chapters:[],favorite:false});
+if(!save())return;
+['title','desc','chars'].forEach(x=>document.getElementById(x).value='');
+document.getElementById('message').textContent='¡Historia guardada! ✨';
+view('library')
+}
+function render(){
+let q=(document.getElementById('search').value||'').toLowerCase();
+let books=document.getElementById('books'),favs=document.getElementById('favs');
+books.innerHTML='';favs.innerHTML='';
+stories.filter(s=>(s.title+' '+s.genre).toLowerCase().includes(q)).forEach(s=>{
+let el=document.createElement('div');el.className='book';
+let cover=document.createElement('div');cover.className='cover';cover.style.background=({rose:'linear-gradient(130deg,#a64d83,#39152e)',blue:'linear-gradient(130deg,#416d9b,#111b37)',green:'linear-gradient(130deg,#39735f,#142c23)',violet:'linear-gradient(130deg,#8658a8,#271439)'})[s.style];cover.textContent='☾ '+s.title;
+let h=document.createElement('h3');h.textContent=s.title;
+let p=document.createElement('p');p.className='small';p.textContent=s.genre+' · '+s.chapters.length+' capítulo(s)';
+let open=document.createElement('button');open.textContent='Abrir';open.onclick=()=>openStory(s.id);
+let fav=document.createElement('button');fav.textContent=s.favorite?'♥ Favorito':'♡ Favoritos';fav.onclick=()=>{s.favorite=!s.favorite;save();render()};
+let del=document.createElement('button');del.textContent='Eliminar';del.onclick=()=>{if(confirm('¿Eliminar esta historia?')){stories=stories.filter(x=>x.id!==s.id);save();render()}};
+el.append(cover,h,p,open,fav,del);books.append(el);
+if(s.favorite){let copy=document.createElement('div');copy.className='book';let name=document.createElement('p');name.textContent='♡ '+s.title;let b=document.createElement('button');b.textContent='Abrir';b.onclick=()=>openStory(s.id);copy.append(name,b);favs.append(copy)}
+});
+document.getElementById('empty').classList.toggle('hidden',books.children.length>0)
+}
+function openStory(id){
+current=stories.find(s=>s.id===id);if(!current)return;
+document.getElementById('bookTitle').textContent=current.title;
+document.getElementById('bookInfo').textContent=current.genre;
+document.getElementById('bookDesc').textContent=current.desc||'Sin sinopsis.';
+document.getElementById('bookChars').textContent='Personajes: '+(current.chars||'Por descubrir');
+renderChapters();view('reader')
+}
+function renderChapters(){
+let box=document.getElementById('chapters');box.innerHTML='';
+if(!current.chapters.length){box.textContent='Aún no hay capítulos.';return}
+current.chapters.forEach((c,i)=>{let article=document.createElement('div');article.className='book';let h=document.createElement('h3');h.textContent=(i+1)+'. '+c.name;let p=document.createElement('p');p.style.whiteSpace='pre-wrap';p.textContent=c.body;article.append(h,p);box.append(article)})
+}
+function addChapter(){
+if(!current)return;
+let name=document.getElementById('chapterName').value.trim(),body=document.getElementById('chapterBody').value.trim();
+if(!name||!body){document.getElementById('chapterMessage').textContent='Escribe el título y el texto.';return}
+current.chapters.push({name,body});if(!save())return;
+document.getElementById('chapterName').value='';document.getElementById('chapterBody').value='';
+document.getElementById('chapterMessage').textContent='¡Capítulo guardado!';renderChapters();render()
+}
+render();
+</script>
+</body>
+</html>
