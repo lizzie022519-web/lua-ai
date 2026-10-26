@@ -3,151 +3,177 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lua AI — Mundo de historias</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#100b1c">
+<title>Lua — Tu mundo de historias</title>
 <style>
+:root{--bg:#100b1c;--panel:#1c142b;--panel2:#261b39;--purple:#b58aff;--pink:#f0a9e8;--text:#f7f0ff;--muted:#b8aacb;--border:#39284d}
 *{box-sizing:border-box}
-body{margin:0;background:#100b1b;color:#f5efff;font-family:Georgia,serif}
-header{text-align:center;padding:30px 12px;background:linear-gradient(140deg,#563274,#180f29)}
-h1{color:#e9a8ff;letter-spacing:4px}
-main{max-width:850px;margin:auto;padding:16px}
-section{background:#20162f;border:1px solid #654780;border-radius:16px;padding:18px;margin:16px 0}
-h2{color:#e9a8ff}
-input,textarea,select{width:100%;padding:12px;margin:8px 0 14px;background:#120d1e;color:white;border:1px solid #765394;border-radius:8px}
-textarea{min-height:100px}
-button{padding:10px 14px;margin:4px;background:#68418a;color:white;border:1px solid #b18bd0;border-radius:9px}
-.book{padding:14px;margin:10px 0;background:#30203f;border-radius:12px}
-.cover{padding:24px;text-align:center;font-size:22px;background:linear-gradient(130deg,#8658a8,#271439);border-radius:8px;margin-bottom:10px}
-.small{color:#c7b4d9;font-size:13px}
-.hidden{display:none}
+body{margin:0;background:radial-gradient(ellipse at top,#2a1742 0,#100b1c 55%);color:var(--text);font-family:system-ui,-apple-system,sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0;border-radius:12px;padding:11px 15px;background:var(--purple);color:#180e26;font-weight:700}
+button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+button.danger{background:#57243e;color:#ffe8f4}
+header{padding:20px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border);background:#100b1ce8;position:sticky;top:0;z-index:5;backdrop-filter:blur(14px)}
+.logo{font-size:29px;font-weight:900;letter-spacing:2px;color:var(--purple)}
+.logo small{display:block;font-size:10px;letter-spacing:3px;color:var(--muted);font-weight:500}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav button{padding:9px 12px}
+main{max-width:1100px;margin:auto;padding:24px 5% 60px}
+.hero{padding:32px 0 25px}
+.eyebrow{color:var(--pink);letter-spacing:3px;font-size:12px;font-weight:800}
+h1{font-size:clamp(32px,7vw,55px);line-height:1.1;margin:12px 0}
+p{line-height:1.6}
+.muted{color:var(--muted)}
+.panel{background:#1c142bd9;border:1px solid var(--border);border-radius:20px;padding:20px;margin:18px 0}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+input,textarea,select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:#100b1c;color:var(--text);outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--purple)}
+textarea{min-height:180px;resize:vertical;line-height:1.7}
+label{display:block;margin:14px 0 7px;color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+.story{background:var(--panel);border:1px solid var(--border);border-radius:17px;overflow:hidden}
+.cover{height:145px;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;background:linear-gradient(135deg,#392254,#171025);font-size:27px}
+.cover img{width:100%;height:100%;object-fit:cover}
+.storybody{padding:15px}
+.story h3{margin:0 0 7px}
+.pill{display:inline-block;font-size:11px;padding:5px 8px;border-radius:20px;background:#342447;color:#e5d0ff;margin:3px 3px 3px 0}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}
+.actions button{font-size:12px;padding:8px 10px}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.hidden{display:none!important}
+.reader{max-width:760px;margin:auto}
+.readertext{white-space:pre-wrap;line-height:1.95;font-size:17px}
+footer{text-align:center;padding:28px;color:var(--muted);border-top:1px solid var(--border)}
+.small{font-size:12px}
+hr{border:0;border-top:1px solid var(--border);margin:20px 0}
+@media(max-width:600px){header{align-items:flex-start;flex-direction:column}nav{width:100%}nav button{flex:1;font-size:12px;padding:9px 5px}.panel{padding:15px}.hero{padding-top:20px}}
 </style>
 </head>
 <body>
 <header>
-<h1>☾ LUA AI</h1>
-<p>Donde tus sueños se convierten en historias ✦</p>
+  <div class="logo">Lua <small>TU MUNDO DE HISTORIAS</small></div>
+  <nav>
+    <button class="secondary" onclick="showPage('home')">Inicio</button>
+    <button class="secondary" onclick="showPage('library')">Biblioteca</button>
+    <button class="secondary" onclick="showPage('drafts')">Mis borradores</button>
+    <button onclick="newStory()">＋ Escribir</button>
+  </nav>
 </header>
 <main>
-<section>
-<h2>🌙 Menú</h2>
-<button onclick="view('library')">📚 Biblioteca</button>
-<button onclick="view('create')">✧ Crear historia</button>
-<button onclick="view('favorites')">♡ Favoritos</button>
+<section id="home">
+  <div class="hero">
+    <div class="eyebrow">✦ TU IMAGINACIÓN, SIN FRONTERAS ✦</div>
+    <h1>Todo comienza<br>con una historia.</h1>
+    <p class="muted">Crea universos, inventa personajes y escribe tu próximo capítulo. Este espacio es tuyo.</p>
+    <div class="toolbar">
+      <button onclick="newStory()">✦ Crear una historia</button>
+      <button class="secondary" onclick="showPage('library')">Explorar biblioteca</button>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>Encuentra tu próximo universo</h2>
+    <input id="homeSearch" placeholder="Buscar historias o autores..." oninput="searchFromHome()">
+    <div class="toolbar">
+      <button class="secondary" onclick="filterCategory('Fantasía')">Fantasía</button>
+      <button class="secondary" onclick="filterCategory('Romance')">Romance</button>
+      <button class="secondary" onclick="filterCategory('Misterio')">Misterio</button>
+      <button class="secondary" onclick="filterCategory('Aventura')">Aventura</button>
+    </div>
+  </div>
+  <div class="section-title"><h2>Mis historias</h2><span class="muted small" id="homeCount"></span></div>
+  <div class="grid" id="homeGrid"></div>
 </section>
 
-<section id="create" class="hidden">
-<h2>Crear una historia</h2>
-<label>Título</label>
-<input id="title" placeholder="Nombre de tu historia">
-<label>Género</label>
-<select id="genre">
-<option>Fantasía</option><option>Romance</option><option>Misterio</option>
-<option>Aventura</option><option>Terror</option><option>Drama</option>
-<option>Ciencia ficción</option><option>Fanfic</option>
-</select>
-<label>Portada</label>
-<select id="style">
-<option value="violet">Noche violeta</option>
-<option value="rose">Rosa encantado</option>
-<option value="blue">Reino de hielo</option>
-<option value="green">Bosque mágico</option>
-</select>
-<label>Sinopsis</label>
-<textarea id="desc" placeholder="¿De qué trata?"></textarea>
-<label>Personajes</label>
-<input id="chars" placeholder="Nombres de los personajes">
-<button onclick="createStory()">Guardar historia ✦</button>
-<p id="message"></p>
+<section id="library" class="hidden">
+  <div class="hero"><div class="eyebrow">✦ EXPLORA Y CREA ✦</div><h1>Biblioteca</h1><p class="muted">Tus historias guardadas en un solo lugar.</p></div>
+  <div class="panel">
+    <label for="search">Buscar por título, autor o descripción</label>
+    <input id="search" placeholder="Escribe para buscar..." oninput="renderLibrary()">
+    <label for="categoryFilter">Categoría</label>
+    <select id="categoryFilter" onchange="renderLibrary()">
+      <option value="">Todas las categorías</option>
+      <option>Fantasía</option><option>Romance</option><option>Misterio</option><option>Aventura</option><option>Terror</option><option>Ciencia ficción</option><option>Drama</option><option>Fanfiction</option><option>Otro</option>
+    </select>
+    <div class="toolbar"><button class="secondary" onclick="favoritesOnly()">♡ Ver favoritos</button><button class="secondary" onclick="clearFilters()">Mostrar todas</button></div>
+  </div>
+  <div class="grid" id="libraryGrid"></div>
 </section>
 
-<section id="library">
-<h2>📚 Mi biblioteca</h2>
-<input id="search" placeholder="Buscar historias..." oninput="render()">
-<div id="books"></div>
-<p id="empty" class="small">Todavía no hay historias. ¡Crea la primera!</p>
+<section id="drafts" class="hidden">
+  <div class="hero"><div class="eyebrow">✦ TU ESPACIO CREATIVO ✦</div><h1>Mis borradores</h1><p class="muted">Tus ideas guardadas para continuar cuando quieras.</p></div>
+  <div class="grid" id="draftGrid"></div>
 </section>
 
-<section id="favorites" class="hidden">
-<h2>♡ Mis favoritos</h2>
-<div id="favs"></div>
+<section id="editor" class="hidden">
+  <div class="hero"><div class="eyebrow">✦ TALLER DE ESCRITURA ✦</div><h1 id="editorHeading">Crear una historia</h1><p class="muted">Cada gran universo empieza con una idea.</p></div>
+  <div class="panel">
+    <input id="storyId" type="hidden">
+    <label for="title">Título de la historia *</label><input id="title" maxlength="120" placeholder="El nombre de tu universo">
+    <label for="author">Nombre de autora o autor</label><input id="author" maxlength="60" placeholder="Tu seudónimo">
+    <label for="description">Sinopsis</label><textarea id="description" style="min-height:90px" maxlength="1500" placeholder="¿De qué trata tu historia?"></textarea>
+    <label for="category">Categoría</label>
+    <select id="category"><option>Fantasía</option><option>Romance</option><option>Misterio</option><option>Aventura</option><option>Terror</option><option>Ciencia ficción</option><option>Drama</option><option>Fanfiction</option><option>Otro</option></select>
+    <label for="cover">URL de imagen para la portada (opcional)</label><input id="cover" type="url" placeholder="https://...">
+    <label for="chapterTitle">Título del capítulo</label><input id="chapterTitle" maxlength="120" placeholder="Capítulo 1: El comienzo">
+    <label for="chapterText">Contenido del capítulo</label><textarea id="chapterText" placeholder="Escribe tu historia aquí..."></textarea>
+    <p class="muted small">Puedes guardar y volver a editar tus historias. No hay un límite artificial de capítulos en la aplicación; el espacio disponible depende de tu navegador.</p>
+    <div class="toolbar"><button onclick="saveStory(false)">Guardar borrador</button><button onclick="saveStory(true)">Guardar historia</button><button class="secondary" onclick="showPage('home')">Cancelar</button></div>
+    <div id="editorMessage" class="muted"></div>
+  </div>
 </section>
 
 <section id="reader" class="hidden">
-<button onclick="view('library')">← Volver</button>
-<h2 id="bookTitle"></h2>
-<p id="bookInfo" class="small"></p>
-<p id="bookDesc"></p>
-<p id="bookChars" class="small"></p>
-<hr>
-<h2>Capítulos</h2>
-<div id="chapters"></div>
-<h3>Nuevo capítulo</h3>
-<input id="chapterName" placeholder="Título del capítulo">
-<textarea id="chapterBody" placeholder="Escribe tu capítulo aquí..."></textarea>
-<button onclick="addChapter()">Guardar capítulo</button>
-<p id="chapterMessage" class="small"></p>
+  <div class="reader">
+    <button class="secondary" onclick="showPage('library')">← Volver a la biblioteca</button>
+    <div class="hero"><div class="eyebrow" id="readerCategory"></div><h1 id="readerTitle"></h1><p class="muted" id="readerMeta"></p><p id="readerDescription"></p></div>
+    <div class="toolbar"><button class="secondary" id="favoriteButton" onclick="toggleCurrentFavorite()">♡ Añadir a favoritos</button><button onclick="editCurrentStory()">✎ Editar historia</button></div>
+    <hr><div id="chapterList"></div>
+    <div class="panel">
+      <h3>Continuar escribiendo</h3>
+      <p class="muted small">Añade un capítulo nuevo a esta historia.</p>
+      <button onclick="addChapter()">＋ Nuevo capítulo</button>
+    </div>
+  </div>
 </section>
 </main>
-<footer><p class="small" style="text-align:center">Lua AI · Tu imaginación no tiene límites ✨</p></footer>
-
+<footer>Lua ✦ Un universo hecho de palabras.<br><span class="small">Tus datos se guardan en este navegador. Exporta copias de tus historias con frecuencia.</span></footer>
 <script>
-let stories=[];
-let current=null;
-try{stories=JSON.parse(localStorage.getItem('luaStories')||'[]')}catch(e){}
-function save(){try{localStorage.setItem('luaStories',JSON.stringify(stories));return true}catch(e){alert('No se pudo guardar en este navegador.');return false}}
-function view(id){
-['create','library','favorites','reader'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id));
-if(id==='library'||id==='favorites')render();
-window.scrollTo(0,0)
+const KEY='lua_stories_v1';
+let stories=loadStories(), currentId=null, favoritesMode=false;
+function loadStories(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(stories));return true}catch(e){alert('No hay espacio suficiente en el navegador. Exporta tus historias y reduce el tamaño de las imágenes.');return false}}
+function uid(){return 'lua-'+Date.now()+'-'+Math.random().toString(36).slice(2,8)}
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function showPage(id){document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');if(id==='home')renderHome();if(id==='library')renderLibrary();if(id==='drafts')renderDrafts();window.scrollTo(0,0)}
+function newStory(){currentId=null;['storyId','title','author','description','cover','chapterTitle','chapterText'].forEach(id=>document.getElementById(id).value='');document.getElementById('category').value='Fantasía';document.getElementById('editorHeading').textContent='Crear una historia';document.getElementById('editorMessage').textContent='';showPage('editor')}
+function saveStory(isPublished){
+ const title=document.getElementById('title').value.trim();if(!title){alert('Escribe un título para tu historia.');return}
+ const id=document.getElementById('storyId').value||uid();
+ let s=stories.find(x=>x.id===id);
+ const chapterTitle=document.getElementById('chapterTitle').value.trim();
+ const chapterText=document.getElementById('chapterText').value;
+ const chapter={title:chapterTitle||'Capítulo 1',text:chapterText};
+ if(s){s.title=title;s.author=document.getElementById('author').value.trim()||'Anónimo';s.description=document.getElementById('description').value.trim();s.category=document.getElementById('category').value;s.cover=document.getElementById('cover').value.trim();s.published=isPublished;s.updated=new Date().toISOString();if(chapterText.trim()){if(s.chapters.length===0)s.chapters.push(chapter);else if(s.chapters[s.chapters.length-1].text===chapterText)s.chapters[s.chapters.length-1]=chapter;else s.chapters.push(chapter)}}
+ else{s={id,title,author:document.getElementById('author').value.trim()||'Anónimo',description:document.getElementById('description').value.trim(),category:document.getElementById('category').value,cover:document.getElementById('cover').value.trim(),published:isPublished,favorite:false,created:new Date().toISOString(),updated:new Date().toISOString(),chapters:chapterText.trim()?[chapter]:[]};stories.unshift(s)}
+ if(persist()){currentId=id;document.getElementById('editorMessage').textContent=isPublished?'Historia guardada.':'Borrador guardado.';showPage(isPublished?'library':'drafts')}
 }
-function createStory(){
-let title=document.getElementById('title').value.trim();
-if(!title){document.getElementById('message').textContent='Escribe un título primero.';return}
-stories.unshift({id:Date.now(),title,genre:document.getElementById('genre').value,style:document.getElementById('style').value,desc:document.getElementById('desc').value,chars:document.getElementById('chars').value,chapters:[],favorite:false});
-if(!save())return;
-['title','desc','chars'].forEach(x=>document.getElementById(x).value='');
-document.getElementById('message').textContent='¡Historia guardada! ✨';
-view('library')
-}
-function render(){
-let q=(document.getElementById('search').value||'').toLowerCase();
-let books=document.getElementById('books'),favs=document.getElementById('favs');
-books.innerHTML='';favs.innerHTML='';
-stories.filter(s=>(s.title+' '+s.genre).toLowerCase().includes(q)).forEach(s=>{
-let el=document.createElement('div');el.className='book';
-let cover=document.createElement('div');cover.className='cover';cover.style.background=({rose:'linear-gradient(130deg,#a64d83,#39152e)',blue:'linear-gradient(130deg,#416d9b,#111b37)',green:'linear-gradient(130deg,#39735f,#142c23)',violet:'linear-gradient(130deg,#8658a8,#271439)'})[s.style];cover.textContent='☾ '+s.title;
-let h=document.createElement('h3');h.textContent=s.title;
-let p=document.createElement('p');p.className='small';p.textContent=s.genre+' · '+s.chapters.length+' capítulo(s)';
-let open=document.createElement('button');open.textContent='Abrir';open.onclick=()=>openStory(s.id);
-let fav=document.createElement('button');fav.textContent=s.favorite?'♥ Favorito':'♡ Favoritos';fav.onclick=()=>{s.favorite=!s.favorite;save();render()};
-let del=document.createElement('button');del.textContent='Eliminar';del.onclick=()=>{if(confirm('¿Eliminar esta historia?')){stories=stories.filter(x=>x.id!==s.id);save();render()}};
-el.append(cover,h,p,open,fav,del);books.append(el);
-if(s.favorite){let copy=document.createElement('div');copy.className='book';let name=document.createElement('p');name.textContent='♡ '+s.title;let b=document.createElement('button');b.textContent='Abrir';b.onclick=()=>openStory(s.id);copy.append(name,b);favs.append(copy)}
-});
-document.getElementById('empty').classList.toggle('hidden',books.children.length>0)
-}
-function openStory(id){
-current=stories.find(s=>s.id===id);if(!current)return;
-document.getElementById('bookTitle').textContent=current.title;
-document.getElementById('bookInfo').textContent=current.genre;
-document.getElementById('bookDesc').textContent=current.desc||'Sin sinopsis.';
-document.getElementById('bookChars').textContent='Personajes: '+(current.chars||'Por descubrir');
-renderChapters();view('reader')
-}
-function renderChapters(){
-let box=document.getElementById('chapters');box.innerHTML='';
-if(!current.chapters.length){box.textContent='Aún no hay capítulos.';return}
-current.chapters.forEach((c,i)=>{let article=document.createElement('div');article.className='book';let h=document.createElement('h3');h.textContent=(i+1)+'. '+c.name;let p=document.createElement('p');p.style.whiteSpace='pre-wrap';p.textContent=c.body;article.append(h,p);box.append(article)})
-}
-function addChapter(){
-if(!current)return;
-let name=document.getElementById('chapterName').value.trim(),body=document.getElementById('chapterBody').value.trim();
-if(!name||!body){document.getElementById('chapterMessage').textContent='Escribe el título y el texto.';return}
-current.chapters.push({name,body});if(!save())return;
-document.getElementById('chapterName').value='';document.getElementById('chapterBody').value='';
-document.getElementById('chapterMessage').textContent='¡Capítulo guardado!';renderChapters();render()
-}
-render();
+function newChapterEditor(s){document.getElementById('storyId').value=s.id;document.getElementById('title').value=s.title;document.getElementById('author').value=s.author;document.getElementById('description').value=s.description;document.getElementById('category').value=s.category;document.getElementById('cover').value=s.cover;document.getElementById('chapterTitle').value='Capítulo '+(s.chapters.length+1);document.getElementById('chapterText').value='';document.getElementById('editorHeading').textContent='Nuevo capítulo';showPage('editor')}
+function addChapter(){let s=stories.find(x=>x.id===currentId);if(s)newChapterEditor(s)}
+function storyCard(s){return `<article class="story"><div class="cover">${s.cover?`<img src="${esc(s.cover)}" alt="Portada" onerror="this.style.display='none'">`:'✦ Lua ✦'}</div><div class="storybody"><span class="pill">${esc(s.category)}</span><h3>${esc(s.title)}</h3><p class="muted small">Por ${esc(s.author)} · ${s.chapters.length} capítulo(s)</p><p>${esc(s.description||'Una historia esperando ser descubierta.').slice(0,115)}</p><div class="actions"><button onclick="readStory('${s.id}')">Leer / abrir</button><button class="secondary" onclick="toggleFavorite('${s.id}')">${s.favorite?'♥':'♡'}</button><button class="secondary" onclick="editStory('${s.id}')">Editar</button></div></div></article>`}
+function renderHome(){let arr=stories.filter(s=>s.published);document.getElementById('homeCount').textContent=arr.length+' historia(s)';document.getElementById('homeGrid').innerHTML=arr.length?arr.map(storyCard).join(''):'<p class="muted">Todavía no hay historias. ¡Crea la primera!</p>'}
+function renderLibrary(){let q=(document.getElementById('search')?.value||'').toLowerCase(),cat=document.getElementById('categoryFilter')?.value||'';let arr=stories.filter(s=>s.published&&(!favoritesMode||s.favorite)&&(!cat||s.category===cat)&&[s.title,s.author,s.description].some(v=>(v||'').toLowerCase().includes(q)));document.getElementById('libraryGrid').innerHTML=arr.length?arr.map(storyCard).join(''):'<p class="muted">No encontramos historias con esos filtros.</p>'}
+function renderDrafts(){let arr=stories.filter(s=>!s.published);document.getElementById('draftGrid').innerHTML=arr.length?arr.map(storyCard).join(''):'<p class="muted">Tus borradores aparecerán aquí.</p>'}
+function editStory(id){let s=stories.find(x=>x.id===id);if(!s)return;currentId=id;document.getElementById('storyId').value=s.id;document.getElementById('title').value=s.title;document.getElementById('author').value=s.author;document.getElementById('description').value=s.description;document.getElementById('category').value=s.category;document.getElementById('cover').value=s.cover;let c=s.chapters[s.chapters.length-1]||{title:'Capítulo 1',text:''};document.getElementById('chapterTitle').value=c.title;document.getElementById('chapterText').value=c.text;document.getElementById('editorHeading').textContent='Editar historia';showPage('editor')}
+function readStory(id){let s=stories.find(x=>x.id===id);if(!s)return;currentId=id;document.getElementById('readerTitle').textContent=s.title;document.getElementById('readerCategory').textContent=s.category;document.getElementById('readerMeta').textContent='Por '+s.author+' · '+s.chapters.length+' capítulo(s)';document.getElementById('readerDescription').textContent=s.description;document.getElementById('favoriteButton').textContent=s.favorite?'♥ Quitar de favoritos':'♡ Añadir a favoritos';document.getElementById('chapterList').innerHTML=s.chapters.length?s.chapters.map((c,i)=>`<article class="panel"><h2>${esc(c.title||'Capítulo '+(i+1))}</h2><div class="readertext">${esc(c.text)}</div></article>`).join(''):'<p class="muted">Esta historia todavía no tiene capítulos.</p>';showPage('reader')}
+function editCurrentStory(){if(currentId)editStory(currentId)}
+function toggleFavorite(id){let s=stories.find(x=>x.id===id);if(s){s.favorite=!s.favorite;persist();renderHome();renderLibrary();renderDrafts();if(currentId===id)document.getElementById('favoriteButton').textContent=s.favorite?'♥ Quitar de favoritos':'♡ Añadir a favoritos'}}
+function toggleCurrentFavorite(){if(currentId)toggleFavorite(currentId);readStory(currentId)}
+function favoritesOnly(){favoritesMode=true;showPage('library');renderLibrary()}
+function clearFilters(){favoritesMode=false;document.getElementById('search').value='';document.getElementById('categoryFilter').value='';renderLibrary()}
+function filterCategory(cat){showPage('library');document.getElementById('categoryFilter').value=cat;renderLibrary()}
+function searchFromHome(){showPage('library');document.getElementById('search').value=document.getElementById('homeSearch').value;renderLibrary()}
+renderHome();
 </script>
 </body>
 </html>
