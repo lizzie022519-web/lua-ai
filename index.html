@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lua AI</title>
+<style>
+body{margin:0;padding:20px;background:#120d1c;color:#f8efff;font-family:Arial,sans-serif}
+header{text-align:center;color:#d4b3ff}
+h1{font-size:36px}
+.card{background:#211831;border:1px solid #60457d;border-radius:16px;padding:16px;margin:15px 0}
+input,select,textarea{box-sizing:border-box;width:100%;margin:8px 0 14px;padding:12px;border-radius:9px;border:1px solid #765b91;background:#100c17;color:white;font-size:16px}
+textarea{min-height:100px}
+button{background:#c6a0f6;color:#21132e;border:0;border-radius:10px;padding:12px;margin:4px 0;font-weight:bold}
+#resultado{white-space:pre-wrap;line-height:1.6;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<header>
+<div>☾ ✦ ☽</div>
+<h1>Lua AI</h1>
+<p>Tu universo de historias y fanfics</p>
+</header>
+<div class="card">
+<h3>✧ Crea tu historia</h3>
+<label>Título</label>
+<input id="titulo" placeholder="Nombre de tu historia">
+<label>Género</label>
+<select id="genero">
+<option>Fantasía</option><option>Fanfic</option><option>Romance juvenil</option><option>Misterio</option><option>Acción</option><option>Drama</option>
+</select>
+<label>Personajes</label>
+<textarea id="personajes" placeholder="Nombres y personalidades"></textarea>
+<label>Tu idea</label>
+<textarea id="idea" placeholder="¿Qué quieres que suceda?"></textarea>
+<button onclick="crear()">Crear instrucción</button>
+<button onclick="continuar()">Continuar historia</button>
+</div>
+<div class="card">
+<h3>✧ Instrucción para la IA</h3>
+<div id="resultado">Tu idea aparecerá aquí.</div>
+<button onclick="copiar()">Copiar instrucción</button>
+<button onclick="window.open('https://chatgpt.com/','_blank')">Abrir ChatGPT</button>
+</div>
+<div class="card">
+<h3>✧ Tu borrador</h3>
+<textarea id="borrador" placeholder="Pega aquí tu historia"></textarea>
+<button onclick="guardar()">Guardar borrador</button>
+<button onclick="descargar()">Descargar historia</button>
+</div>
+<script>
+function crear(){
+let t=document.getElementById('titulo').value||'Sin título';
+let g=document.getElementById('genero').value;
+let p=document.getElementById('personajes').value;
+let i=document.getElementById('idea').value;
+document.getElementById('resultado').textContent=
+'Escribe una historia en español titulada "'+t+'". Género: '+g+
+'. Personajes: '+p+'. Idea: '+i+
+'. Usa diálogos naturales, emociones y una trama coherente. Mantén el contenido apropiado para adolescentes y sin escenas sexuales explícitas.';
+}
+function continuar(){
+crear();
+document.getElementById('resultado').textContent +=
+'\nContinúa la historia y termina con un giro interesante.';
+}
+async function copiar(){
+let t=document.getElementById('resultado').textContent;
+try{await navigator.clipboard.writeText(t);alert('¡Copiado!');}
+catch(e){alert('Mantén pulsado el texto para copiarlo.');}
+}
+function guardar(){
+localStorage.setItem('lua_borrador',document.getElementById('borrador').value);
+alert('Borrador guardado en este navegador.');
+}
+function descargar(){
+let t=document.getElementById('borrador').value;
+if(!t){alert('Primero escribe tu historia.');return;}
+let a=document.createElement('a');
+a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));
+a.download='mi-historia.txt';a.click();URL.revokeObjectURL(a.href);
+}
+document.getElementById('borrador').value=localStorage.getItem('lua_borrador')||'';
+</script>
+</body>
+  </html>
